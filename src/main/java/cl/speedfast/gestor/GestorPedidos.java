@@ -5,6 +5,7 @@ import cl.speedfast.interf.Despachable;
 import cl.speedfast.interf.Rastreable;
 import cl.speedfast.model.Pedido;
 import cl.speedfast.model.Repartidor;
+import cl.speedfast.model.ZonaDeCarga;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +17,19 @@ public class GestorPedidos {
 
     List<Pedido> pedidos = new ArrayList<>();
     List<Repartidor> repartidores = new ArrayList<>();
+    private ZonaDeCarga zonaDeCarga;
+
+    public GestorPedidos(ZonaDeCarga zonaDeCarga) {
+        this.zonaDeCarga = zonaDeCarga;
+    }
 
     public void agregarPedido(Pedido pedido){
         pedidos.add(pedido);
+        zonaDeCarga.agregarPedido(pedido);
     }
 
     public void agregarRepartidor(Repartidor repartidor){
         repartidores.add(repartidor);
-        pedidos.addAll(repartidor.getPedidosAsignados());
     }
 
     public void historialPedidos(){

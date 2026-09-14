@@ -120,7 +120,7 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
 
     @Override
     public void despachar() {
-        this.estado = EstadoPedido.DESPACHADO;
+        this.estado = EstadoPedido.EN_REPARTO;
         String mensaje = "Pedido #" + idPedido + " despachado correctamente";
         historial.add(mensaje);
         System.out.println(mensaje);
