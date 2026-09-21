@@ -10,12 +10,14 @@ public class ZonaDeCarga {
         pedidosPendientes.add(pedido);
     }
 
-    public synchronized Pedido retirarPedido() {
-
-        if (pedidosPendientes.isEmpty()) {
-            return null;
+    public synchronized Pedido retirarPedidoPara(String nombreRepartidor) {
+        for (Pedido pedido : pedidosPendientes) {
+            String asignado = pedido.getRepartidorAsignado();
+            if (asignado == null || asignado.equals(nombreRepartidor)) {
+                pedidosPendientes.remove(pedido);
+                return pedido;
+            }
         }
-
-        return pedidosPendientes.remove(0);
+        return null;
     }
 }

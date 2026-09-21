@@ -64,12 +64,6 @@ public class GestorPedidos {
         return pedidos;
     }
 
-    /**
-     * Ejecuta a todos los repartidores registrados de forma concurrente,
-     * utilizando un pool de hilos administrado por ExecutorService.
-     * El metodo bloquea la ejecucion hasta que todos los repartidores
-     * finalicen sus entregas o se agote el tiempo maximo de espera.
-     */
     public void iniciarEntregasConcurrentes(){
 
         if (repartidores.isEmpty()){
@@ -99,4 +93,9 @@ public class GestorPedidos {
 
         System.out.println("\n=== TODOS LOS REPARTIDORES HAN FINALIZADO SUS ENTREGAS ===\n");
     }
+
+    public List<Repartidor> listaRepartidores(){
+        return repartidores;
+    }
+
 }
