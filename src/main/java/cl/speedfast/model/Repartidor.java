@@ -32,7 +32,7 @@ public class Repartidor implements Runnable{
     public void run(){
         while (true) {
 
-            Pedido pedido = zonaDeCarga.retirarPedido();
+            Pedido pedido = zonaDeCarga.retirarPedidoPara(nombre);
 
             if (pedido == null) {
                 break;
