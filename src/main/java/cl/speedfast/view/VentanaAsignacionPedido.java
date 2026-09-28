@@ -35,6 +35,7 @@ public class VentanaAsignacionPedido extends JFrame {
         Configuracion();
     }
 
+    // configura la ventana y registra los eventos de los botones
     private void Configuracion() {
         setContentPane(panelVentanaAsignacion);
         pack();
@@ -47,6 +48,9 @@ public class VentanaAsignacionPedido extends JFrame {
         btnIniciarEntrega.addActionListener(e -> iniciarEntregas());
     }
 
+    /**
+     * carga los pedidos disponibles y los repartidores en los combobox
+     */
     private void cargarDatos() {
         comboBox1.removeAllItems();
 
@@ -71,6 +75,9 @@ public class VentanaAsignacionPedido extends JFrame {
         btnAsignar.setEnabled(hayDatos);
     }
 
+    /**
+     * valida la selección y asigna el repartidor al pedido seleccionado
+     */
     private void asignar() {
         Integer idPedido = (Integer) comboBox1.getSelectedItem();
         Repartidor repartidorSeleccionado = (Repartidor) comboBox2.getSelectedItem();
@@ -131,6 +138,7 @@ public class VentanaAsignacionPedido extends JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void iniciarEntregas() {
         boolean hayPedidosParaRepartir =

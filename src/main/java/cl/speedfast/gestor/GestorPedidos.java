@@ -25,6 +25,14 @@ public class GestorPedidos {
         this.zonaDeCarga = zonaDeCarga;
     }
 
+    /**
+     * crea y registra un pedido según el tipo seleccionado
+     *
+     * @param direccion dirección de entrega del pedido
+     * @param tipo tipo de pedido
+     * @param distancia distancia de entrega en kilómetros
+     * @return identificador generado para el pedido
+     */
     public Integer agregarPedido(String direccion, String tipo, double distancia) {
 
         Pedido pedido;
@@ -61,6 +69,11 @@ public class GestorPedidos {
         }
     }
 
+    /**
+     * registra un nuevo repartidor en la base de datos
+     *
+     * @param nombre nombre del repartidor
+     */
     public void agregarRepartidor(String nombre) {
 
         Repartidor nuevoRepartidor = new Repartidor(nombre);
@@ -72,6 +85,13 @@ public class GestorPedidos {
         }
     }
 
+    /**
+     * registra una entrega asociando un pedido con un repartidor.
+     *
+     * @param idPedido identificador del pedido
+     * @param idRepartidor identificador del repartidor
+     * @return true si la entrega fue registrada correctamente
+     */
     public boolean guardarEntrega(int idPedido, int idRepartidor) {
 
         Entrega entrega = new Entrega(
@@ -90,6 +110,13 @@ public class GestorPedidos {
         return true;
     }
 
+    /**
+     * asigna un repartidor a un pedido y actualiza la zona de carga
+     *
+     * @param pedidoId identificador del pedido
+     * @param nombreRepartidor nombre del repartidor
+     * @return true si la asignación fue realizada correctamente
+     */
     public boolean asignarRepartidorGestor(Integer pedidoId, String nombreRepartidor) {
 
         boolean exito = pedidoDAO.asignarRepartidorDao(pedidoId, nombreRepartidor);
@@ -103,6 +130,9 @@ public class GestorPedidos {
         return true;
     }
 
+    /**
+     * muestra el historial de los pedidos que implementan Rastreable
+     */
     public void historialPedidos() {
 
         for (Pedido pedido : pedidoDAO.listarPedidos()) {
@@ -113,6 +143,9 @@ public class GestorPedidos {
         }
     }
 
+    /**
+     * muestra en consola el resumen de todos los pedidos registrados
+     */
     public void verResumenPedidos() {
 
         for (Pedido pedido : pedidoDAO.listarPedidos()) {
@@ -121,6 +154,11 @@ public class GestorPedidos {
         }
     }
 
+    /**
+     * despacha un pedido y actualiza su estado en la base de datos
+     *
+     * @param pedido pedido que será despachado
+     */
     public void despacharPedido(Pedido pedido) {
 
         if (pedido instanceof Despachable d) {
@@ -137,6 +175,11 @@ public class GestorPedidos {
         }
     }
 
+    /**
+     * cancela un pedido y actualiza su estado en la base de datos
+     *
+     * @param pedido pedido que será cancelado
+     */
     public void cancelarPedido(Pedido pedido) {
 
         if (pedido instanceof Cancelable c) {
@@ -153,6 +196,11 @@ public class GestorPedidos {
         }
     }
 
+    /**
+     * inicia las entregas utilizando múltiples hilos de forma concurrente
+     *
+     * @param mostrarMensaje función utilizada para mostrar mensajes del proceso
+     */
     public void iniciarEntregasConcurrentes(Consumer<String> mostrarMensaje) {
 
         List<Repartidor> repartidores = repartidorDAO.obtenerRepartidores();
@@ -206,10 +254,20 @@ public class GestorPedidos {
         }
     }
 
+    /**
+     * obtiene todos los pedidos registrados en la base de datos
+     *
+     * @return lista de pedidos registrados
+     */
     public List<Pedido> listaPedidos() {
         return pedidoDAO.listarPedidos();
     }
 
+    /**
+     * obtiene los repartidores registrados y les asigna la zona de carga
+     *
+     * @return lista de repartidores registrados
+     */
     public List<Repartidor> listaRepartidores() {
 
         List<Repartidor> repartidores = repartidorDAO.obtenerRepartidores();
