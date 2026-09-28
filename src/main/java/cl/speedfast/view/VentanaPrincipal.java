@@ -1,23 +1,29 @@
 package cl.speedfast.view;
 
+import cl.speedfast.controller.EntregaController;
 import cl.speedfast.controller.PedidoController;
+import cl.speedfast.controller.RepartidorController;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class VentanaPrincipal extends JFrame {
 
-    private PedidoController controller;
+    private PedidoController pedidoController;
+    private RepartidorController repartidorController;
+    private EntregaController entregaController;
 
     private JButton registrarButton;
     private JButton listarButton;
     private JButton asignarButton;
     private JPanel panelVentanaPrincipal;
+    private JButton btnRepartidorRegistro;
 
-    public VentanaPrincipal(PedidoController controller) {
-        this.controller = controller;
+    public VentanaPrincipal(PedidoController pedidoController, RepartidorController repartidorController, EntregaController entregaController) {
+        this.pedidoController = pedidoController;
+        this.repartidorController = repartidorController;
+        this.entregaController = entregaController;
         Configuracion();
     }
 
@@ -28,13 +34,15 @@ public class VentanaPrincipal extends JFrame {
         setLocationRelativeTo(null);
 
         registrarButton.addActionListener(e ->
-                abrirVentana(new VentanaRegistroPedido(controller)));
+                abrirVentana(new VentanaRegistroPedido(pedidoController)));
 
         listarButton.addActionListener(e ->
-                abrirVentana(new VentanaListaPedidos(controller)));
+                abrirVentana(new VentanaListaPedidos(pedidoController)));
 
         asignarButton.addActionListener(e ->
-                abrirVentana(new VentanaAsignacionPedido(controller)));
+                abrirVentana(new VentanaAsignacionPedido(pedidoController,repartidorController,entregaController)));
+        btnRepartidorRegistro.addActionListener( e ->
+                abrirVentana(new VentanaRegistrarRepartidor(repartidorController)));
     }
 
 

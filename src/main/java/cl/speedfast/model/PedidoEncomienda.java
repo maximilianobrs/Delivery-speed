@@ -1,5 +1,7 @@
 package cl.speedfast.model;
 
+import cl.speedfast.enums.EstadoPedido;
+
 /**
  * Pedido de encomienda: hereda todo el comportamiento comun de Pedido y solo
  * define la validacion, el repartidor por defecto y su formula de tiempo.
@@ -10,9 +12,12 @@ public class PedidoEncomienda extends Pedido {
     public PedidoEncomienda() {
         super();
     }
+    public PedidoEncomienda(String direccionEntrega, String tipoPedido, double distanciaKm) {
+        super(direccionEntrega, tipoPedido, distanciaKm);
+    }
 
-    public PedidoEncomienda(String idPedido, String direccionEntrega, String tipoPedido, double distanciaKm) {
-        super(idPedido, direccionEntrega, tipoPedido, distanciaKm);
+    public PedidoEncomienda(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, EstadoPedido estado) {
+        super(idPedido, direccionEntrega, tipoPedido, distanciaKm,estado);
     }
 
     @Override
