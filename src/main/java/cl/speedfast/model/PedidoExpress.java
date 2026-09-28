@@ -1,5 +1,7 @@
 package cl.speedfast.model;
 
+import cl.speedfast.enums.EstadoPedido;
+
 /**
  * Pedido Express: hereda todo el comportamiento comun de Pedido y solo
  * define la validacion, el repartidor por defecto y su formula de tiempo.
@@ -11,8 +13,12 @@ public class PedidoExpress extends Pedido {
         super();
     }
 
-    public PedidoExpress(String idPedido, String direccionEntrega, String tipoPedido, double distanciaKm) {
-        super(idPedido, direccionEntrega, tipoPedido, distanciaKm);
+    public PedidoExpress(String direccionEntrega, String tipoPedido, double distanciaKm) {
+        super(direccionEntrega, tipoPedido, distanciaKm);
+    }
+
+    public PedidoExpress(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, EstadoPedido estado) {
+        super(idPedido, direccionEntrega, tipoPedido, distanciaKm,estado);
     }
 
     @Override

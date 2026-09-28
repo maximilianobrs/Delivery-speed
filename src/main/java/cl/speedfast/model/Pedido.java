@@ -16,7 +16,7 @@ import java.util.List;
  */
 public abstract class Pedido implements Despachable, Cancelable, Rastreable {
 
-    private String idPedido;
+    private int idPedido;
     private String direccionEntrega;
     private String tipoPedido;
     private double distanciaKm;
@@ -27,19 +27,26 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
     public Pedido() {
     }
 
-    public Pedido(String idPedido, String direccionEntrega, String tipoPedido, double distanciaKm) {
-        this.idPedido = idPedido;
+    public Pedido(String direccionEntrega, String tipoPedido, double distanciaKm) {
         this.direccionEntrega = direccionEntrega;
         this.tipoPedido = tipoPedido;
         this.distanciaKm = distanciaKm;
         this.estado = EstadoPedido.PENDIENTE;
     }
 
-    public String getIdPedido() {
+    public Pedido(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, EstadoPedido estado) {
+        this.idPedido = idPedido;
+        this.direccionEntrega = direccionEntrega;
+        this.tipoPedido = tipoPedido;
+        this.distanciaKm = distanciaKm;
+        this.estado = estado;
+    }
+
+    public int getIdPedido() {
         return idPedido;
     }
 
-    public void setIdPedido(String idPedido) {
+    public void setIdPedido(int idPedido) {
         this.idPedido = idPedido;
     }
 
@@ -146,5 +153,10 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
             }
             System.out.println("------------------------------");
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(idPedido);
     }
 }

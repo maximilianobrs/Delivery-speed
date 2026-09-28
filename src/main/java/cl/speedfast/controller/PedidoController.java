@@ -2,9 +2,8 @@ package cl.speedfast.controller;
 
 import cl.speedfast.gestor.GestorPedidos;
 import cl.speedfast.model.*;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PedidoController {
 
@@ -14,44 +13,16 @@ public class PedidoController {
         this.gestor = gestor;
     }
 
-    public void registrarPedido(String id, String direccion, String tipo, double distancia) {
-
-        Pedido pedido;
-
-        switch (tipo) {
-            case "Comida":
-                pedido = new PedidoComida(id, direccion, tipo, distancia);
-                break;
-
-            case "Encomienda":
-                pedido = new PedidoEncomienda(id, direccion, tipo, distancia);
-                break;
-
-            case "Express":
-                pedido = new PedidoExpress(id, direccion, tipo, distancia);
-                break;
-
-            default:
-                throw new IllegalArgumentException("Tipo de pedido no valido: " + tipo);
-        }
-
-        gestor.agregarPedido(pedido);
+    public Integer registrarPedido(String direccion, String tipo, double distancia) {
+        return gestor.agregarPedido(direccion,tipo,distancia);
     }
 
     public List<Pedido> obtenerPedidos() {
         return gestor.listaPedidos();
     }
 
-    public List<String> obtenerNombresRepartidores() {
-        List<String> nombres = new ArrayList<>();
-        for (Repartidor repartidor : gestor.listaRepartidores()) {
-            nombres.add(repartidor.getNombre());
-        }
-        return nombres;
-    }
-
-    public void asignarRepartidor(Pedido pedido, String nombre) {
-        pedido.asignarRepartidor(nombre);
+    public boolean asignarRepartidor(Integer pedidoId, String nombre) {
+        return gestor.asignarRepartidorGestor(pedidoId,nombre);
     }
 
     public void despacharPedido(Pedido pedido) {
@@ -62,7 +33,8 @@ public class PedidoController {
         gestor.cancelarPedido(pedido);
     }
 
-    public void iniciarEntregas() {
-        gestor.iniciarEntregasConcurrentes();
+    public void iniciarEntregas(Consumer<String> mostrarMensaje) {
+        gestor.iniciarEntregasConcurrentes(mostrarMensaje);
     }
+
 }
