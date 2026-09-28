@@ -2,8 +2,6 @@ package cl.speedfast.controller;
 
 import cl.speedfast.gestor.GestorPedidos;
 import cl.speedfast.model.Repartidor;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class RepartidorController {

@@ -10,13 +10,8 @@ public class EntregaController {
         this.gestor = gestor;
     }
 
-    public boolean guardarEntregaController(
-            int idPedido,
-            int idRepartidor) {
+    public boolean guardarEntregaController(int idPedido, int idRepartidor) {
 
-        return gestor.guardarEntrega(
-                idPedido,
-                idRepartidor
-        );
+        return gestor.guardarEntrega(idPedido, idRepartidor);
     }
 }
