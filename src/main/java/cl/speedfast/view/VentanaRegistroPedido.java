@@ -3,7 +3,6 @@ package cl.speedfast.view;
 import cl.speedfast.controller.PedidoController;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class VentanaRegistroPedido extends JFrame {
 
@@ -22,6 +21,7 @@ public class VentanaRegistroPedido extends JFrame {
     }
 
     private void Configuracion() {
+        setTitle("Registro pedido");
         setContentPane(ventanaPrincipalRegistro);
         pack();
 
@@ -54,10 +54,10 @@ public class VentanaRegistroPedido extends JFrame {
 
         try {
 
-            Integer idGenerado = controller.registrarPedido(direccion, tipo, distancia);
+            controller.guardar(direccion, tipo, distancia);
 
             JOptionPane.showMessageDialog(this,
-                    "Pedido #" + idGenerado + " registrado correctamente.",
+                    "Pedido registrado correctamente.",
                     "Registro exitoso",
                     JOptionPane.INFORMATION_MESSAGE);
             limpiar();

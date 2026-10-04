@@ -47,4 +47,8 @@ public class ZonaDeCarga {
 
         return false;
     }
+
+    public synchronized void limpiar() {
+        pedidosPendientes.clear();
+    }
 }

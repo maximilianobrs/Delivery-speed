@@ -18,6 +18,12 @@ public class VentanaRegistrarRepartidor extends JFrame{
 
     public VentanaRegistrarRepartidor(RepartidorController repartidorController) {
         this.repartidorController = repartidorController;
+
+        configuracion();
+    }
+
+    private void configuracion(){
+        setTitle("Registro repartidor");
         setContentPane(ventanaRegistrarRepartidor);
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -42,23 +48,31 @@ public class VentanaRegistrarRepartidor extends JFrame{
         String nombre = txtNombre.getText().trim();
 
         if (nombre.isEmpty()){
-            mostrarError("Debe ingresar un nombre.");
-            txtNombre.requestFocus();
-            return;
+            mostrarMensaje("El nombre del reparidor no puede estar vacio");
         }
 
-        String patronLetras = "^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\\s]+$";
-
-        if (!nombre.matches(patronLetras)){
-            mostrarError("Debe ingresar solo letras");
-            txtNombre.requestFocus();
-            return;
+        if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")){
+            mostrarMensaje("El nombre solo debe contener letras y espacios.");
         }
-          repartidorController.guardarRepartidor(nombre);
 
-        JOptionPane.showMessageDialog(this,"Repartidor guardado correctamente");
+        try{
 
-        txtNombre.setText("");
+            repartidorController.guardar(nombre);
+
+            JOptionPane.showMessageDialog(this,"Repartidor guardado correctamente");
+
+            txtNombre.setText("");
+            txtNombre.requestFocus();
+
+        }catch (IllegalArgumentException ex){
+
+            mostrarError(ex.getMessage());
+            txtNombre.requestFocus();
+        }
+    }
+
+    private void mostrarMensaje(String mensaje){
+        JOptionPane.showMessageDialog(this, mensaje);
     }
 
     private void mostrarError(String mensaje) {

@@ -1,16 +1,18 @@
 package cl.speedfast.model;
 
-import cl.speedfast.dao.PedidoDAO;
+import cl.speedfast.dao.imlp.PedidoDAOImpl;
 import cl.speedfast.enums.EstadoPedido;
 
+import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 public class Repartidor implements Runnable {
 
-    private final PedidoDAO pedidoDAO = new PedidoDAO();
+    private final PedidoDAOImpl pedidoDAOImpl = new PedidoDAOImpl();
 
     private int idRepartidor;
     private String nombre;
+    private LocalDateTime fechaCreacion;
     private ZonaDeCarga zonaDeCarga;
     private Consumer<String> mostrarMensaje;
 
@@ -21,9 +23,10 @@ public class Repartidor implements Runnable {
         this.nombre = nombre;
     }
 
-    public Repartidor(int idRepartidor, String nombre) {
+    public Repartidor(int idRepartidor, String nombre, LocalDateTime fechaCreacion) {
         this.idRepartidor = idRepartidor;
         this.nombre = nombre;
+        this.fechaCreacion = fechaCreacion;
     }
 
     public Repartidor(String nombre, ZonaDeCarga zonaDeCarga) {
@@ -45,6 +48,14 @@ public class Repartidor implements Runnable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
     public ZonaDeCarga getZonaDeCarga() {
@@ -91,7 +102,7 @@ public class Repartidor implements Runnable {
 
             pedido.getHistorial().add("Pedido #" + pedido.getIdPedido() + " paso a estado EN_REPARTO.");
 
-            boolean actualizado = pedidoDAO.actualizarEstado(pedido.getIdPedido(), EstadoPedido.EN_REPARTO);
+            boolean actualizado = pedidoDAOImpl.actualizarEstado(pedido.getIdPedido(), EstadoPedido.EN_REPARTO);
 
             if (!actualizado) {
 
@@ -117,7 +128,7 @@ public class Repartidor implements Runnable {
 
             pedido.getHistorial().add("Pedido #" + pedido.getIdPedido() + " entregado correctamente por " + nombre + ".");
 
-            actualizado = pedidoDAO.actualizarEstado(pedido.getIdPedido(), EstadoPedido.ENTREGADO);
+            actualizado = pedidoDAOImpl.actualizarEstado(pedido.getIdPedido(), EstadoPedido.ENTREGADO);
 
             if (!actualizado) {
 
@@ -131,6 +142,6 @@ public class Repartidor implements Runnable {
 
     @Override
     public String toString() {
-        return idRepartidor + " - " + nombre;
+        return getIdRepartidor() + " - " + getNombre();
     }
 }

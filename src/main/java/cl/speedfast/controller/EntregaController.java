@@ -1,17 +1,25 @@
 package cl.speedfast.controller;
 
-import cl.speedfast.gestor.GestorPedidos;
+import cl.speedfast.model.Entrega;
+import cl.speedfast.service.EntregaService;
+
+import java.util.List;
 
 public class EntregaController {
 
-    private GestorPedidos gestor;
+    private EntregaService entregaService;
 
-    public EntregaController(GestorPedidos gestor) {
-        this.gestor = gestor;
+    public EntregaController(EntregaService entregaService) {
+        this.entregaService = entregaService;
+    }
+    public void guardar(int idPedido, int idRepartidor) {
+        entregaService.guardar(idPedido, idRepartidor);
+    }
+    public List<Entrega> listar(){
+        return entregaService.listar();
     }
 
-    public boolean guardarEntregaController(int idPedido, int idRepartidor) {
-
-        return gestor.guardarEntrega(idPedido, idRepartidor);
+    public boolean iniciarEntregas() {
+        return entregaService.iniciarEntregas();
     }
 }

@@ -46,17 +46,30 @@
         <children>
           <component id="c1f04" class="javax.swing.JButton" binding="btGuardar">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="110" height="32"/>
+              </grid>
             </constraints>
             <properties>
+              <background color="-10345473"/>
+              <focusPainted value="false"/>
+              <foreground color="-1"/>
               <text value="Guardar"/>
             </properties>
           </component>
           <component id="37305" class="javax.swing.JButton" binding="btCancelar">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="110" height="32"/>
+              </grid>
             </constraints>
             <properties>
+              <background color="-1"/>
+              <borderPainted value="true"/>
+              <contentAreaFilled value="false"/>
+              <focusCycleRoot value="false"/>
+              <focusPainted value="false"/>
+              <foreground color="-13948117"/>
               <text value="Cancelar"/>
             </properties>
           </component>
