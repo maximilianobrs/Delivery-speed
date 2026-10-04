@@ -1,4 +1,4 @@
-package cl.speedfast.view;
+package cl.speedfast.view.ventanasEditarRegistros;
 
 import cl.speedfast.controller.PedidoController;
 import cl.speedfast.enums.EstadoPedido;
@@ -19,7 +19,7 @@ public class VentanaEditarPedido extends JFrame{
     private PedidoController pedidoController;
     private Runnable alGuardar;
 
-    VentanaEditarPedido(PedidoController pedidoController,Runnable alGuardar){
+    public VentanaEditarPedido(PedidoController pedidoController, Runnable alGuardar){
         this.pedidoController = pedidoController;
         this.alGuardar = alGuardar;
 
@@ -40,7 +40,6 @@ public class VentanaEditarPedido extends JFrame{
             cmbPedido.addItem(p);
         }
 
-        // el listener va después de llenar el combo, para que no se dispare al cargar
         cmbPedido.addActionListener(e -> rellenarCampos());
         btnGuardar.addActionListener(e -> editarPedido());
         btnCancelar.addActionListener(e -> dispose());

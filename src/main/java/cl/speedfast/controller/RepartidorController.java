@@ -17,7 +17,7 @@ public class RepartidorController {
 
         String patronLetras = "^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\\s]+$";
 
-        if (nombre == null || nombre.isEmpty()){
+        if (nombre == null || nombre.isBlank()){
             throw new IllegalArgumentException("El nombre del repartidor es obligatorio y no puede estar vacío.");
         }
 
@@ -29,7 +29,7 @@ public class RepartidorController {
     }
 
     public void actualizar(int idRepartidor, String nombre){
-        if (nombre == null || nombre.isEmpty()){
+        if (nombre == null || nombre.isBlank()){
             throw new IllegalArgumentException("El nombre del repartidor es obligatorio y no puede estar vacío.");
         }
 

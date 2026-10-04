@@ -7,7 +7,7 @@ import cl.speedfast.service.EntregaService;
 import cl.speedfast.service.PedidoService;
 import cl.speedfast.model.*;
 import cl.speedfast.service.RepartidorService;
-import cl.speedfast.view.VentanaPrincipal;
+import cl.speedfast.view.ventanaPrincipal.VentanaPrincipal;
 
 import javax.swing.*;
 

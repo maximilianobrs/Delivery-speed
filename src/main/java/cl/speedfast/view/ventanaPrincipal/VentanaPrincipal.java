@@ -1,8 +1,12 @@
-package cl.speedfast.view;
+package cl.speedfast.view.ventanaPrincipal;
 
 import cl.speedfast.controller.EntregaController;
 import cl.speedfast.controller.PedidoController;
 import cl.speedfast.controller.RepartidorController;
+import cl.speedfast.view.ventanaAsignacion.VentanaAsignacionPedido;
+import cl.speedfast.view.panelesListados.PanelListaEntregas;
+import cl.speedfast.view.panelesListados.PanelListaPedidos;
+import cl.speedfast.view.panelesListados.PanelListaRepartidores;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +21,6 @@ public class VentanaPrincipal extends JFrame {
     private JPanel panelVentanaPrincipal;
     private JPanel panelContenido;
 
-    private JButton btnInicio;
     private JButton listarButton;
     private JButton asignarButton;
     private JButton btnRepartidores;
@@ -38,11 +41,8 @@ public class VentanaPrincipal extends JFrame {
 
         PanelListaPedidos panelPedidos = new PanelListaPedidos(pedidoController);
         PanelListaRepartidores panelRepartidores = new PanelListaRepartidores(repartidorController);
-        PanelListaEntregas panelListaEntregas = new PanelListaEntregas(entregaController);
-        PanelInicio panelInicio = new PanelInicio(pedidoController,repartidorController,entregaController);
+        PanelListaEntregas panelListaEntregas = new PanelListaEntregas(entregaController,pedidoController,repartidorController);
 
-
-        panelContenido.add(panelInicio, "INICIO");
         panelContenido.add(panelPedidos,"PEDIDOS");
         panelContenido.add(panelRepartidores,"REPARTIDORES");
         panelContenido.add(panelListaEntregas, "ENTREGAS");
@@ -52,13 +52,6 @@ public class VentanaPrincipal extends JFrame {
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        panelInicio.cargarDatos();
-
-        btnInicio.addActionListener(e -> {
-            panelInicio.cargarDatos();
-            cardLayout.show(panelContenido, "INICIO");
-        });
 
         btnRepartidores.addActionListener(e-> {
             cardLayout.show(panelContenido,"REPARTIDORES");

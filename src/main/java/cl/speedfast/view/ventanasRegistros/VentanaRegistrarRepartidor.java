@@ -1,4 +1,4 @@
-package cl.speedfast.view;
+package cl.speedfast.view.ventanasRegistros;
 
 import cl.speedfast.controller.RepartidorController;
 

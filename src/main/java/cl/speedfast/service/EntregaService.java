@@ -44,6 +44,53 @@ public class EntregaService {
         }
     }
 
+    /**
+     * cambia el pedido y el repartidor de una entrega.
+     * Un pedido solo puede tener una entrega.
+     */
+    public void actualizar(int idEntrega, int idPedido, int idRepartidor) {
+
+        for (Entrega e : entregaDAOImpl.listar()) {
+            if (e.getIdPedido() == idPedido && e.getIdEntrega() != idEntrega) {
+                throw new IllegalArgumentException("El pedido #" + idPedido + " ya tiene una entrega asignada.");
+            }
+        }
+
+        boolean actualizado = entregaDAOImpl.actualizar(idEntrega, idPedido, idRepartidor);
+
+        if (!actualizado) {
+            throw new IllegalArgumentException("No se pudo actualizar la entrega.");
+        }
+    }
+
+    /**
+     * elimina una entrega
+     */
+    public void eliminar(int idEntrega) {
+        boolean eliminado = entregaDAOImpl.eliminar(idEntrega);
+
+        if (!eliminado) {
+            throw new IllegalArgumentException("No se encontró la entrega para eliminar.");
+        }
+    }
+
+    /**
+     * Entrega toda la lista de pedidos en la DB
+     */
+    public List<Entrega> listar (){
+        return entregaDAOImpl.listar();
+    }
+
+    /**
+     * lista las entregas de un pedido o de un repartidor
+     */
+    public List<Entrega> listarFiltrado(String estado) {
+        return entregaDAOImpl.listarFiltrado(estado);
+    }
+
+    /**
+     * llena la zona de carga con las entregas que aún no terminan
+     */
     private void cargarZona() {
         zonaDeCarga.limpiar();
 
@@ -64,6 +111,11 @@ public class EntregaService {
         }
     }
 
+    /**
+     * lanza un hilo por repartidor con pedidos asignados y espera a que terminen
+     *
+     * @return false si no había pedidos para repartir
+     */
     public boolean iniciarEntregas() {
 
         cargarZona();
@@ -96,7 +148,5 @@ public class EntregaService {
         return true;
     }
 
-    public List<Entrega> listar (){
-        return entregaDAOImpl.listar();
-    }
+
 }

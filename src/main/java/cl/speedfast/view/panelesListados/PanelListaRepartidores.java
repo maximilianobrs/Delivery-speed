@@ -1,7 +1,9 @@
-package cl.speedfast.view;
+package cl.speedfast.view.panelesListados;
 
 import cl.speedfast.controller.RepartidorController;
 import cl.speedfast.model.Repartidor;
+import cl.speedfast.view.ventanasEditarRegistros.VentanaEditarRepartidor;
+import cl.speedfast.view.ventanasRegistros.VentanaRegistrarRepartidor;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -102,16 +104,17 @@ public class PanelListaRepartidores extends JPanel{
                 null,
                 "¿Está seguro de que desea eliminar al repartidor con ID: " + idString + "?",
                 "Confirmar eliminación",
-                javax.swing.JOptionPane.YES_NO_OPTION, // Muestra los botones Sí y No
-                javax.swing.JOptionPane.WARNING_MESSAGE // Pone un icono de advertencia
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE
         );
 
         if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
-
-            repartidorController.eliminar(idRepartidor);
-
-            JOptionPane.showMessageDialog(this, "Repartidor eliminado correctamente.");
-
+            try {
+                repartidorController.eliminar(idRepartidor);
+                JOptionPane.showMessageDialog(this, "Repartidor eliminado correctamente.");
+            } catch (RuntimeException ex) {
+                mostrarError(ex.getMessage());
+            }
         }
     }
 

@@ -66,7 +66,7 @@ public class PedidoDAOImpl implements PedidoDAO {
         try(Connection conn = ConexionDB.conectar();
             PreparedStatement stmt = conn.prepareStatement(sql)){
 
-            stmt.setInt(6,idPedido);
+            stmt.setInt(1, idPedido);
 
             return stmt.executeUpdate() > 0;
 
@@ -100,21 +100,15 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 switch (tipo) {
                     case "Comida":
-                        pedido = new PedidoComida(
-                                idPedido, direccion, tipo, distancia, estado,dateTime
-                        );
+                        pedido = new PedidoComida(idPedido, direccion, tipo, distancia, estado,dateTime);
                         break;
 
                     case "Encomienda":
-                        pedido = new PedidoEncomienda(
-                                idPedido, direccion, tipo, distancia, estado,dateTime
-                        );
+                        pedido = new PedidoEncomienda(idPedido, direccion, tipo, distancia, estado,dateTime);
                         break;
 
                     case "Express":
-                        pedido = new PedidoExpress(
-                                idPedido, direccion, tipo, distancia, estado,dateTime
-                        );
+                        pedido = new PedidoExpress(idPedido, direccion, tipo, distancia, estado,dateTime);
                         break;
 
                     default:
@@ -131,6 +125,65 @@ public class PedidoDAOImpl implements PedidoDAO {
 
         return pedidos;
 
+    }
+
+    public List<Pedido> listarFiltrado(String estadoFiltro, String tipoFiltro) {
+        List<Pedido> pedidos = new ArrayList<>();
+
+        String sql = "SELECT id_pedido, direccion_entrega, tipo_pedido, distancia_km, " +
+                "estado, fecha_creacion FROM pedido " +
+                "WHERE (estado = ? OR ? = 'Todos') " +
+                "AND (tipo_pedido = ? OR ? = 'Todos')";
+
+        try (Connection conn = ConexionDB.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, estadoFiltro);
+            stmt.setString(2, estadoFiltro);
+            stmt.setString(3, tipoFiltro);
+            stmt.setString(4, tipoFiltro);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    int idPedido = rs.getInt("id_pedido");
+                    String direccion = rs.getString("direccion_entrega");
+                    String tipo = rs.getString("tipo_pedido");
+                    double distancia = rs.getDouble("distancia_km");
+                    String estadoBD = rs.getString("estado");
+                    LocalDateTime dateTime = rs.getObject("fecha_creacion", LocalDateTime.class);
+
+                    EstadoPedido estado = EstadoPedido.valueOf(estadoBD);
+
+                    Pedido pedido;
+
+                    switch (tipo) {
+                        case "Comida":
+                            pedido = new PedidoComida(idPedido, direccion, tipo, distancia, estado, dateTime);
+                            break;
+
+                        case "Encomienda":
+                            pedido = new PedidoEncomienda(idPedido, direccion, tipo, distancia, estado, dateTime);
+                            break;
+
+                        case "Express":
+                            pedido = new PedidoExpress(idPedido, direccion, tipo, distancia, estado, dateTime);
+                            break;
+
+                        default:
+                            throw new IllegalArgumentException("Tipo no válido: " + tipo);
+                    }
+
+                    pedidos.add(pedido);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error BD filtrar: " + e.getMessage());
+            throw new RuntimeException("No se pudo filtrar la lista de pedidos.");
+        }
+
+        return pedidos;
     }
 
     public Pedido obtenerPorId (int idPedido) throws Exception {

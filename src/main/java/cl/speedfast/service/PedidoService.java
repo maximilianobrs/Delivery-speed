@@ -104,6 +104,17 @@ public class PedidoService {
         return pedidoDAOImpl.listar();
     }
 
+    /**
+     * obtiene los pedidos filtrados por estado y tipo
+     *
+     * @param estado estado a filtrar, o "Todos" para no filtrar
+     * @param tipo tipo a filtrar, o "Todos" para no filtrar
+     * @return lista de pedidos que cumplen los filtros
+     */
+    public List<Pedido> listarFiltrado(String estado, String tipo) {
+        return pedidoDAOImpl.listarFiltrado(estado, tipo);
+    }
+
     public Pedido buscarPorId(int idPedido) throws Exception {
         Pedido pedido = pedidoDAOImpl.obtenerPorId(idPedido);
 
