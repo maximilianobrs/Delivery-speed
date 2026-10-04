@@ -5,6 +5,7 @@ import cl.speedfast.interf.Cancelable;
 import cl.speedfast.interf.Despachable;
 import cl.speedfast.interf.Rastreable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
     private String tipoPedido;
     private double distanciaKm;
     private String repartidorAsignado;
+    private LocalDateTime fechaCreacion;
     protected EstadoPedido estado;
     protected List<String> historial = new ArrayList<>();
 
@@ -34,13 +36,25 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
         this.estado = EstadoPedido.PENDIENTE;
     }
 
-    public Pedido(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, EstadoPedido estado) {
+    public Pedido(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, EstadoPedido estado,LocalDateTime fechaCreacion) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
         this.tipoPedido = tipoPedido;
         this.distanciaKm = distanciaKm;
         this.estado = estado;
+        this.fechaCreacion = fechaCreacion;
     }
+
+    public Pedido(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, String repartidorAsignado, EstadoPedido estado,LocalDateTime fechaCreacion) {
+        this.idPedido = idPedido;
+        this.direccionEntrega = direccionEntrega;
+        this.tipoPedido = tipoPedido;
+        this.distanciaKm = distanciaKm;
+        this.repartidorAsignado = repartidorAsignado;
+        this.estado = estado;
+        this.fechaCreacion = fechaCreacion;
+    }
+
 
     public int getIdPedido() {
         return idPedido;
@@ -88,6 +102,14 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
 
     public void setEstado(EstadoPedido estado) {
         this.estado = estado;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
     public List<String> getHistorial() {
@@ -157,6 +179,6 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
 
     @Override
     public String toString() {
-        return String.valueOf(idPedido);
+        return getIdPedido() + " - " + getDireccionEntrega();
     }
 }

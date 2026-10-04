@@ -4,10 +4,12 @@ import cl.speedfast.controller.EntregaController;
 import cl.speedfast.controller.PedidoController;
 import cl.speedfast.controller.RepartidorController;
 import cl.speedfast.enums.EstadoPedido;
+import cl.speedfast.model.Entrega;
 import cl.speedfast.model.Pedido;
 import cl.speedfast.model.Repartidor;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VentanaAsignacionPedido extends JFrame {
@@ -16,7 +18,7 @@ public class VentanaAsignacionPedido extends JFrame {
     private RepartidorController repartidorController;
     private EntregaController entregaController;
 
-    private JComboBox<Integer> comboBox1;
+    private JComboBox<Pedido> comboBox1;
     private JComboBox<Repartidor> comboBox2;
     private JButton btnAsignar;
     private JButton btnIniciarEntrega;
@@ -35,7 +37,6 @@ public class VentanaAsignacionPedido extends JFrame {
         Configuracion();
     }
 
-    // configura la ventana y registra los eventos de los botones
     private void Configuracion() {
         setContentPane(panelVentanaAsignacion);
         pack();
@@ -49,141 +50,90 @@ public class VentanaAsignacionPedido extends JFrame {
     }
 
     /**
-     * carga los pedidos disponibles y los repartidores en los combobox
+     * carga en los combobox los pedidos pendientes y los repartidores
      */
     private void cargarDatos() {
-        comboBox1.removeAllItems();
 
-        for (Pedido pedido : pedidoController.obtenerPedidos()) {
-            if (pedido.getEstado() != EstadoPedido.ENTREGADO &&
-                    pedido.getEstado() != EstadoPedido.CANCELADO) {
-                comboBox1.addItem(pedido.getIdPedido());
+        List<Integer> asignados = new ArrayList<>();
+
+        for (Entrega e : entregaController.listar()) {
+            asignados.add(e.getIdPedido());
+        }
+
+        comboBox1.removeAllItems();
+        for (Pedido pedido : pedidoController.listar()) {
+            if (pedido.getEstado() == EstadoPedido.PENDIENTE
+                    && !asignados.contains(pedido.getIdPedido())) {
+                comboBox1.addItem(pedido);
             }
         }
 
         comboBox2.removeAllItems();
-
-        List<Repartidor> repartidores = repartidorController.obtenerRepartidores();
-
-        for (Repartidor repartidor : repartidores) {
+        for (Repartidor repartidor : repartidorController.listar()) {
             comboBox2.addItem(repartidor);
         }
 
-        boolean hayDatos = comboBox1.getItemCount() > 0 &&
-                comboBox2.getItemCount() > 0;
-
-        btnAsignar.setEnabled(hayDatos);
+        btnAsignar.setEnabled(comboBox1.getItemCount() > 0 && comboBox2.getItemCount() > 0);
     }
 
     /**
-     * valida la selección y asigna el repartidor al pedido seleccionado
+     * asigna el pedido seleccionado al repartidor seleccionado
      */
     private void asignar() {
-        Integer idPedido = (Integer) comboBox1.getSelectedItem();
-        Repartidor repartidorSeleccionado = (Repartidor) comboBox2.getSelectedItem();
+        Pedido pedido = (Pedido) comboBox1.getSelectedItem();
+        Repartidor repartidor = (Repartidor) comboBox2.getSelectedItem();
 
-        if (idPedido == null || repartidorSeleccionado == null) {
-
-            JOptionPane.showMessageDialog(this, "Debes seleccionar un pedido y un repartidor.", "Sin selección", JOptionPane.WARNING_MESSAGE);
-
-            return;
-        }
-
-        int idRepartidor = repartidorSeleccionado.getIdRepartidor();
-        String nombreRepartidor = repartidorSeleccionado.getNombre();
-
-        Pedido pedido = null;
-
-        for (Pedido p : pedidoController.obtenerPedidos()) {
-            if (p.getIdPedido() == idPedido) {
-                pedido = p;
-                break;
-            }
-        }
-
-        if (pedido == null) {
-
-            JOptionPane.showMessageDialog(this, "No se encontró el pedido.", "Error", JOptionPane.ERROR_MESSAGE);
-
-            return;
-        }
-
-        if (pedido.getEstado() == EstadoPedido.ENTREGADO ||
-                pedido.getEstado() == EstadoPedido.CANCELADO) {
-
-            JOptionPane.showMessageDialog(this, "El pedido #" + pedido.getIdPedido() + " ya está " + pedido.getEstado() + " y no se puede reasignar.", "Estado no permitido", JOptionPane.ERROR_MESSAGE);
-
+        if (pedido == null || repartidor == null) {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un pedido y un repartidor.",
+                    "Sin selección", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
+            entregaController.guardar(pedido.getIdPedido(), repartidor.getIdRepartidor());
 
-            boolean asignado = pedidoController.asignarRepartidor(idPedido, nombreRepartidor);
+            JOptionPane.showMessageDialog(this, "Pedido #" + pedido.getIdPedido()
+                    + " asignado a " + repartidor.getNombre());
 
-            if (asignado) {
-
-                boolean entregaGuardada = entregaController.guardarEntregaController(idPedido, idRepartidor);
-
-                if (!entregaGuardada) {
-                    JOptionPane.showMessageDialog(this, "El repartidor fue asignado, pero no se pudo registrar la entrega.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                JOptionPane.showMessageDialog(this, "Repartidor " + nombreRepartidor + " asignado correctamente al pedido #" + idPedido + ".");
-
-                cargarDatos();
-            }
+            cargarDatos();
 
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-
+    /**
+     * inicia las entregas; los mensajes salen por consola
+     */
     private void iniciarEntregas() {
-        boolean hayPedidosParaRepartir =
-                pedidoController.obtenerPedidos().stream()
-                        .anyMatch(p ->
-                                p.getRepartidorAsignado() != null
-                                        && !p.getRepartidorAsignado().trim().isEmpty()
-                                        && p.getEstado() != EstadoPedido.ENTREGADO
-                                        && p.getEstado() != EstadoPedido.CANCELADO
-                        );
-
-        if (!hayPedidosParaRepartir) {
-
-            JOptionPane.showMessageDialog(this, "No hay pedidos asignados a repartidores para iniciar las entregas.", "Sin entregas pendientes", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        txtProcesoEntrega.setText("");
         btnIniciarEntrega.setEnabled(false);
 
-        new SwingWorker<Void, String>() {
+        new SwingWorker<Void, Void>() {
+
+            private boolean huboEntregas;
 
             @Override
             protected Void doInBackground() {
-                pedidoController.iniciarEntregas(mensaje -> publish(mensaje));
+                huboEntregas = entregaController.iniciarEntregas();
                 return null;
-            }
-
-            @Override
-            protected void process(List<String> mensajes) {
-                for (String mensaje : mensajes) {
-                    txtProcesoEntrega.append(mensaje + "\n");
-                    txtProcesoEntrega.setCaretPosition(txtProcesoEntrega.getDocument().getLength());
-                }
             }
 
             @Override
             protected void done() {
                 btnIniciarEntrega.setEnabled(true);
-
                 cargarDatos();
 
-                JOptionPane.showMessageDialog(VentanaAsignacionPedido.this, "Todos los repartidores finalizaron sus entregas.", "Entregas finalizadas", JOptionPane.INFORMATION_MESSAGE);
+                if (huboEntregas) {
+                    JOptionPane.showMessageDialog(VentanaAsignacionPedido.this,
+                            "Todos los repartidores finalizaron sus entregas.",
+                            "Entregas finalizadas", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(VentanaAsignacionPedido.this,
+                            "No hay pedidos asignados a repartidores.",
+                            "Sin entregas pendientes", JOptionPane.WARNING_MESSAGE);
+                }
             }
-
         }.execute();
     }
+
 }

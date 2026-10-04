@@ -1,40 +1,69 @@
 package cl.speedfast.controller;
 
-import cl.speedfast.gestor.GestorPedidos;
+import cl.speedfast.enums.EstadoPedido;
+import cl.speedfast.service.PedidoService;
 import cl.speedfast.model.*;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class PedidoController {
 
-    private GestorPedidos gestor;
+    private PedidoService pedidoService;
 
-    public PedidoController(GestorPedidos gestor) {
-        this.gestor = gestor;
+    public PedidoController(PedidoService pedidoService) {
+        this.pedidoService = pedidoService;
     }
 
-    public Integer registrarPedido(String direccion, String tipo, double distancia) {
-        return gestor.agregarPedido(direccion,tipo,distancia);
+    public void guardar(String direccion, String tipo, double distancia) {
+        if (direccion == null || tipo == null || direccion.isEmpty() || tipo.isEmpty()){
+            throw new IllegalArgumentException("La direccion del pedido y tipo es obligatoria no pueden estar vacío.");
+        }
+
+        if (distancia < 0) {
+            throw new IllegalArgumentException("La distancia del pedido no puede ser negativa.");
+        }
+
+        pedidoService.guardar(direccion,tipo,distancia);
     }
 
-    public List<Pedido> obtenerPedidos() {
-        return gestor.listaPedidos();
+    public void actualizar(int idPedido, String direccion, String tipo, double distancia, EstadoPedido estado){
+        if (direccion == null || tipo == null || direccion.isEmpty() || tipo.isEmpty()){
+            throw new IllegalArgumentException("La direccion del pedido y tipo es obligatoria no pueden estar vacío.");
+        }
+
+        if (distancia < 0) {
+            throw new IllegalArgumentException("La distancia del pedido no puede ser negativa.");
+        }
+
+        if (idPedido <= 0) {
+            throw new IllegalArgumentException("El ID pedido debe ser mayor a 0.");
+        }
+
+        pedidoService.actualizar(idPedido, direccion, tipo, distancia, estado);
     }
 
-    public boolean asignarRepartidor(Integer pedidoId, String nombre) {
-        return gestor.asignarRepartidorGestor(pedidoId,nombre);
+    public void eliminar(int idPedido){
+
+        if (idPedido <= 0) {
+            throw new IllegalArgumentException("El ID del pedido debe ser mayor a 0.");
+        }
+
+        pedidoService.eliminar(idPedido);
+    }
+
+    public List<Pedido> listar() {
+        return pedidoService.listar();
+    }
+
+    public Pedido buscarPorId (int idPedido) throws Exception {
+        return pedidoService.buscarPorId(idPedido);
     }
 
     public void despacharPedido(Pedido pedido) {
-        gestor.despacharPedido(pedido);
+        pedidoService.despacharPedido(pedido);
     }
 
     public void cancelarPedido(Pedido pedido) {
-        gestor.cancelarPedido(pedido);
-    }
-
-    public void iniciarEntregas(Consumer<String> mostrarMensaje) {
-        gestor.iniciarEntregasConcurrentes(mostrarMensaje);
+        pedidoService.cancelarPedido(pedido);
     }
 
 }

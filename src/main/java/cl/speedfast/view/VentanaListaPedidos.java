@@ -18,6 +18,10 @@ public class VentanaListaPedidos extends JFrame {
     private JButton btnRefrescar;
     private JPanel ventanaPrincipalLista;
     private JButton btnVolver;
+    private JButton btnActualizar;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JComboBox comboBox1;
 
     public VentanaListaPedidos(PedidoController pedidoController) {
         this.pedidoController = pedidoController;
@@ -43,6 +47,7 @@ public class VentanaListaPedidos extends JFrame {
 
         btnRefrescar.addActionListener(e -> cargarPedidos());
         btnVolver.addActionListener(e -> dispose());
+        btnActualizar.addActionListener(e -> actualizar());
 
         table1.addMouseListener(new MouseAdapter() {
             @Override
@@ -57,36 +62,38 @@ public class VentanaListaPedidos extends JFrame {
     }
 
     private void mostrarOpciones(MouseEvent e) {
-        int fila = table1.rowAtPoint(e.getPoint());
+        int filaVista = table1.rowAtPoint(e.getPoint());
+        if (filaVista < 0) return;
 
-        if (fila < 0) return;
+        table1.setRowSelectionInterval(filaVista, filaVista);
 
-        table1.setRowSelectionInterval(fila, fila);
+        int filaModelo = table1.convertRowIndexToModel(filaVista);
 
-        Pedido pedido = pedidoController.obtenerPedidos().get(fila);
+        int idPedido = Integer.parseInt(table1.getModel().getValueAt(filaModelo, 0).toString());
+        String repartidor = table1.getModel().getValueAt(filaModelo, 4).toString();
+        String estadoStr = table1.getModel().getValueAt(filaModelo, 5).toString();
+
+        cl.speedfast.enums.EstadoPedido estado = cl.speedfast.enums.EstadoPedido.valueOf(estadoStr);
 
         JPopupMenu menu = new JPopupMenu();
-
         JMenuItem despachar = new JMenuItem("Despachar");
         JMenuItem cancelar = new JMenuItem("Cancelar pedido");
 
-        if (pedido.getEstado() == cl.speedfast.enums.EstadoPedido.ENTREGADO) {
+        if (estado == cl.speedfast.enums.EstadoPedido.ENTREGADO || estado == cl.speedfast.enums.EstadoPedido.CANCELADO) {
             despachar.setEnabled(false);
             cancelar.setEnabled(false);
         }
 
-        if (pedido.getRepartidorAsignado() == null ||
-                pedido.getRepartidorAsignado().trim().isEmpty()) {
-
+        if (repartidor.equals("Sin asignar") || repartidor.trim().isEmpty()) {
             despachar.setEnabled(false);
         }
 
         despachar.addActionListener(ev ->
-                accionSobreFila(fila, "despachar")
+                ejecutarAccionPedido(idPedido, "despachar")
         );
 
         cancelar.addActionListener(ev ->
-                accionSobreFila(fila, "cancelar")
+                ejecutarAccionPedido(idPedido, "cancelar")
         );
 
         menu.add(despachar);
@@ -95,10 +102,37 @@ public class VentanaListaPedidos extends JFrame {
         menu.show(table1, e.getX(), e.getY());
     }
 
+    private void ejecutarAccionPedido(int idPedido, String accion) {
+        try {
+
+            Pedido pedido = pedidoController.buscarPorId(idPedido);
+
+            if (pedido == null) {
+                JOptionPane.showMessageDialog(this, "El pedido seleccionado ya no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                cargarPedidos();
+                return;
+            }
+
+            switch (accion) {
+                case "despachar":
+                    pedidoController.despacharPedido(pedido);
+                    break;
+                case "cancelar":
+                    pedidoController.cancelarPedido(pedido);
+                    break;
+            }
+
+            cargarPedidos();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al procesar", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void cargarPedidos() {
         modelo.setRowCount(0);
 
-        List<Pedido> pedidos = pedidoController.obtenerPedidos();
+        List<Pedido> pedidos = pedidoController.listar();
 
         for (Pedido pedido : pedidos) {
             modelo.addRow(new Object[]{
@@ -112,18 +146,7 @@ public class VentanaListaPedidos extends JFrame {
         }
     }
 
-    private void accionSobreFila(int fila, String accion) {
-        Pedido pedido = pedidoController.obtenerPedidos().get(fila);
+    private void actualizar(){
 
-        switch (accion) {
-            case "despachar":
-                pedidoController.despacharPedido(pedido);
-                break;
-            case "cancelar":
-                pedidoController.cancelarPedido(pedido);
-                break;
-        }
-
-        cargarPedidos();
     }
 }

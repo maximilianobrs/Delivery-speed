@@ -2,6 +2,8 @@ package cl.speedfast.model;
 
 import cl.speedfast.enums.EstadoPedido;
 
+import java.time.LocalDateTime;
+
 /**
  * Pedido de comida: hereda todo el comportamiento comun de Pedido y solo
  * define la validacion, el repartidor por defecto y su formula de tiempo.
@@ -17,9 +19,14 @@ public class PedidoComida extends Pedido {
         super(direccionEntrega, tipoPedido, distanciaKm);
     }
 
-    public PedidoComida(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, EstadoPedido estado) {
-        super(idPedido, direccionEntrega, tipoPedido, distanciaKm, estado);
+    public PedidoComida(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, EstadoPedido estado, LocalDateTime fechaCreacion) {
+        super(idPedido, direccionEntrega, tipoPedido, distanciaKm, estado,fechaCreacion);
     }
+
+    public PedidoComida(int idPedido, String direccionEntrega, String tipoPedido, double distanciaKm, String repartidorAsignado, EstadoPedido estado,LocalDateTime fechaCreacion) {
+        super(idPedido, direccionEntrega, tipoPedido, distanciaKm, repartidorAsignado, estado,fechaCreacion);
+    }
+
 
     @Override
     public void asignarRepartidor() {
