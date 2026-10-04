@@ -1,13 +1,14 @@
-package cl.speedfast.view;
+package cl.speedfast.view.panelesListados;
 
 import cl.speedfast.controller.PedidoController;
 import cl.speedfast.model.Pedido;
+import cl.speedfast.view.ventanasEditarRegistros.VentanaEditarPedido;
+import cl.speedfast.view.ventanasRegistros.VentanaRegistroPedido;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class PanelListaPedidos extends JPanel{
 
@@ -53,13 +54,15 @@ public class PanelListaPedidos extends JPanel{
         };
 
         tablePedidos.setModel(modelo);
-
-        tablePedidos.setSelectionMode(
-                ListSelectionModel.SINGLE_SELECTION
-        );
-
+        tablePedidos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablePedidos.setAutoCreateRowSorter(true);
         tablePedidos.setFillsViewportHeight(true);
+
+        cmbEstado.setModel(new DefaultComboBoxModel<>(new String[]{"Todos", "PENDIENTE", "EN_REPARTO", "ENTREGADO", "CANCELADO"}));
+        cmbTipo.setModel(new DefaultComboBoxModel<>(new String[]{"Todos", "Comida", "Encomienda", "Express"}));
+
+        cmbEstado.addActionListener(e -> cargarPedidos());
+        cmbTipo.addActionListener(e -> cargarPedidos());
 
         btnRegistrar.addActionListener(e -> abrirVentana(new VentanaRegistroPedido(pedidoController)));
         btnActualizar.addActionListener(e -> cargarPedidos());
@@ -71,23 +74,28 @@ public class PanelListaPedidos extends JPanel{
 
     private void cargarPedidos() {
 
-        if (modelo != null) {
-            modelo.setRowCount(0);
-        }
+        modelo.setRowCount(0);
 
-        List<Pedido> pedidos = pedidoController.listar();
+        String estado = (String) cmbEstado.getSelectedItem();
+        String tipo = (String) cmbTipo.getSelectedItem();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-        for (Pedido pedido : pedidos) {
-            modelo.addRow(new Object[]{
-                    pedido.getIdPedido(),
-                    pedido.getDireccionEntrega(),
-                    pedido.getTipoPedido(),
-                    pedido.getDistanciaKm(),
-                    pedido.getEstado(),
-                    pedido.getFechaCreacion().format(formatter)
-            });
+        try {
+
+            for (Pedido pedido : pedidoController.listarFiltrado(estado, tipo)) {
+                modelo.addRow(new Object[]{
+                        pedido.getIdPedido(),
+                        pedido.getDireccionEntrega(),
+                        pedido.getTipoPedido(),
+                        pedido.getDistanciaKm(),
+                        pedido.getEstado(),
+                        pedido.getFechaCreacion().format(formatter)
+                });
+            }
+        } catch (RuntimeException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -100,39 +108,36 @@ public class PanelListaPedidos extends JPanel{
             return;
         }
 
-        // 2. Convertimos el índice para que no falle si la tabla está ordenada
         int filaModelo = tablePedidos.convertRowIndexToModel(filaVista);
 
-        // 3. Traemos el ID directamente como un String sin importar qué tipo sea originalmente
         String idString = tablePedidos.getModel().getValueAt(filaModelo, 0).toString();
+        int idPedido = Integer.parseInt(idString);
 
         int respuesta = javax.swing.JOptionPane.showConfirmDialog(
                 null,
                 "¿Está seguro de que desea eliminar al repartidor con ID: " + idString + "?",
                 "Confirmar eliminación",
-                javax.swing.JOptionPane.YES_NO_OPTION, // Muestra los botones Sí y No
-                javax.swing.JOptionPane.WARNING_MESSAGE // Pone un icono de advertencia
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE
         );
 
-        // 5. Validamos si el usuario presionó el botón "SÍ"
         if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
-
-            System.out.println("El usuario confirmó. Eliminando ID: " + idString);
-
-            // =======================================================
-            // TODO: Pon aquí tu código para borrarlo de la Base de Datos o Lista
-            // =======================================================
-
-            // Opcional: Si quieres borrar la fila visualmente de la tabla tras confirmar:
-            // DefaultTableModel modelo = (DefaultTableModel) tablaRepartidores.getModel();
-            // modelo.removeRow(filaModelo);
-
+            try{
+                pedidoController.eliminar(idPedido);
+                mostrarMensaje("Pedido eliminado correctamente.");
+            } catch (RuntimeException ex) {
+                mostrarError(ex.getMessage());
+            }
         }
     }
 
     private void abrirVentana(JFrame ventanaHija) {
         ventanaHija.setLocationRelativeTo(this);
         ventanaHija.setVisible(true);
+    }
+
+    private void mostrarMensaje(String mensaje){
+        JOptionPane.showMessageDialog(this, mensaje);
     }
 
     private void mostrarError(String mensaje) {

@@ -1,4 +1,4 @@
-package cl.speedfast.view;
+package cl.speedfast.view.ventanaAsignacion;
 
 import cl.speedfast.controller.EntregaController;
 import cl.speedfast.controller.PedidoController;
@@ -23,10 +23,6 @@ public class VentanaAsignacionPedido extends JFrame {
     private JButton btnAsignar;
     private JButton btnIniciarEntrega;
     private JPanel panelVentanaAsignacion;
-    private JTextArea txtProcesoEntrega;
-    private JPanel panelProcesoEntrega;
-    private JLabel lblProcesoEntrega;
-    private JScrollPane scrollProcesoEntrega;
 
     public VentanaAsignacionPedido(PedidoController pedidoController,
                                    RepartidorController repartidorController,
@@ -34,6 +30,7 @@ public class VentanaAsignacionPedido extends JFrame {
         this.pedidoController = pedidoController;
         this.repartidorController = repartidorController;
         this.entregaController = entregaController;
+        cargarDatos();
         Configuracion();
     }
 
@@ -42,8 +39,6 @@ public class VentanaAsignacionPedido extends JFrame {
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        cargarDatos();
 
         btnAsignar.addActionListener(e -> asignar());
         btnIniciarEntrega.addActionListener(e -> iniciarEntregas());

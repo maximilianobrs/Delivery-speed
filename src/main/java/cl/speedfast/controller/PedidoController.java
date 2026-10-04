@@ -14,7 +14,7 @@ public class PedidoController {
     }
 
     public void guardar(String direccion, String tipo, double distancia) {
-        if (direccion == null || tipo == null || direccion.isEmpty() || tipo.isEmpty()){
+        if (direccion == null || tipo == null || direccion.isBlank() || tipo.isBlank()){
             throw new IllegalArgumentException("La direccion del pedido y tipo es obligatoria no pueden estar vacío.");
         }
 
@@ -26,7 +26,7 @@ public class PedidoController {
     }
 
     public void actualizar(int idPedido, String direccion, String tipo, double distancia, EstadoPedido estado){
-        if (direccion == null || tipo == null || direccion.isEmpty() || tipo.isEmpty()){
+        if (direccion == null || tipo == null || direccion.isBlank() || tipo.isBlank()){
             throw new IllegalArgumentException("La direccion del pedido y tipo es obligatoria no pueden estar vacío.");
         }
 
@@ -52,6 +52,14 @@ public class PedidoController {
 
     public List<Pedido> listar() {
         return pedidoService.listar();
+    }
+
+    public List<Pedido> listarFiltrado(String estado, String tipo) {
+        if (estado == null || tipo == null) {
+            throw new IllegalArgumentException("Los filtros no pueden ser nulos.");
+        }
+
+        return pedidoService.listarFiltrado(estado, tipo);
     }
 
     public Pedido buscarPorId (int idPedido) throws Exception {

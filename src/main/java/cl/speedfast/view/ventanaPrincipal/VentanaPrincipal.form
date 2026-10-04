@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="cl.speedfast.view.VentanaPrincipal">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="cl.speedfast.view.ventanaPrincipal.VentanaPrincipal">
   <grid id="27dc6" binding="panelVentanaPrincipal" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="15" vgap="15">
     <margin top="20" left="20" bottom="20" right="20"/>
     <constraints>
@@ -11,7 +11,7 @@
       <title-color color="-4473925"/>
     </border>
     <children>
-      <grid id="3bf5e" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="3bf5e" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -21,24 +21,9 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="42858" class="javax.swing.JButton" binding="btnInicio">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="100" height="40"/>
-                <preferred-size width="250" height="40"/>
-              </grid>
-            </constraints>
-            <properties>
-              <background color="-10664718"/>
-              <borderPainted value="true"/>
-              <focusPainted value="false"/>
-              <foreground color="-1"/>
-              <text value="Inicio"/>
-            </properties>
-          </component>
           <component id="51705" class="javax.swing.JButton" binding="asignarButton">
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="40"/>
                 <preferred-size width="250" height="40"/>
               </grid>
@@ -54,7 +39,7 @@
           </component>
           <component id="f04e6" class="javax.swing.JButton" binding="listarButton">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="40"/>
                 <preferred-size width="250" height="40"/>
               </grid>
@@ -69,7 +54,7 @@
           </component>
           <component id="92ad2" class="javax.swing.JButton" binding="btnRepartidores">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="40"/>
                 <preferred-size width="250" height="40"/>
               </grid>
@@ -84,7 +69,7 @@
           </component>
           <component id="49daf" class="javax.swing.JButton" binding="btnEntregas">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="40"/>
                 <preferred-size width="250" height="40"/>
               </grid>

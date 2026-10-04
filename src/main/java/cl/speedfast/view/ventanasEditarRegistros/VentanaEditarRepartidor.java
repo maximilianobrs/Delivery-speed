@@ -1,4 +1,4 @@
-package cl.speedfast.view;
+package cl.speedfast.view.ventanasEditarRegistros;
 
 import cl.speedfast.controller.RepartidorController;
 import cl.speedfast.model.Repartidor;
@@ -16,7 +16,7 @@ public class VentanaEditarRepartidor extends JFrame{
     private JButton btnGuardar;
     private JButton btnCancelar;
 
-    VentanaEditarRepartidor(RepartidorController repartidorController, Runnable alGuardar){
+    public VentanaEditarRepartidor(RepartidorController repartidorController, Runnable alGuardar){
         this.repartidorController = repartidorController;
 
         this.alGuardar = alGuardar;
@@ -35,7 +35,6 @@ public class VentanaEditarRepartidor extends JFrame{
             cmbRepartidor.addItem(r);
         }
 
-        // el listener va después de llenar el combo, para que no se dispare al cargar
         cmbRepartidor.addActionListener(e -> rellenarCampos());
         btnGuardar.addActionListener(e -> editarRepartidor());
         btnCancelar.addActionListener(e -> dispose());
